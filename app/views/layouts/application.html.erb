@@ -1,13 +1,19 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Todolists</title>
+    <title>ToDo Lists App</title>
     <%= csrf_meta_tags %>
     <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
     <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
   </head>
 
   <body>
-    <%= yield %>
+    <div class="container">
+      <h1 class="text-center">ToDo Lists App</h1>
+      <hr>
+      <%= render 'layouts/navigation' %>
+      <hr>
+      <%= yield %>
+    </div>
   </body>
 </html>
