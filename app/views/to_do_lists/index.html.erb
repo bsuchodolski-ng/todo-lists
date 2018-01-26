@@ -1,1 +1,5 @@
-<h3>Log in to see your ToDo Lists</h3>
+<% if @user %>
+  You're logged in. Congratulations <%= @user.email %>
+<% else %>
+  <h3>Log in to see your ToDoLists</h3>
+<% end %>
