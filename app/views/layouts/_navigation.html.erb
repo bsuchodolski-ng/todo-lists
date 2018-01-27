@@ -1,12 +1,27 @@
 <nav class="navbar navbar-expand-sm bg-light">
   <ul class="navbar-nav mr-auto">
-    <li class="nav-item">
-      <%= link_to "Sign up", signup_path, class: 'nav-link' %>
-    </li>
+    <% if logged_in? %>
+      <li class="nav-item">
+        <%= link_to "My lists", root_path, class: 'nav-link' %>
+      </li>
+      <li class="nav-item">
+        <%= link_to "Last list", '#', class: 'nav-link' %>
+      </li>
+    <% else %>
+      <li class="nav-item">
+        <%= link_to "Sign up", signup_path, class: 'nav-link' %>
+      </li>
+    <% end %>
   </ul>
   <ul class="navbar-nav float-right">
-    <li class="nav-item">
-      <%= link_to "Log in", login_path, class: 'nav-link' %>
-    </li>
+    <% if logged_in? %>
+      <li class="nav-item">
+        <%= link_to "Log out", '#', class: 'nav-link' %>
+      </li>
+    <% else %>
+      <li class="nav-item">
+        <%= link_to "Log in", login_path, class: 'nav-link' %>
+      </li>
+    <% end %>
   </ul>
 </nav>
