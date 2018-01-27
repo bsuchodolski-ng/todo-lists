@@ -46,7 +46,7 @@ class UserTest < ActiveSupport::TestCase
     end
   end
 
-  test 'email should not be invalid' do
+  test 'invalid emails shoul not be accepted' do
     invalid_addresses = %w[
       foo
       #@%^%#$@#$@#.com
