@@ -19,7 +19,7 @@ class UserLoginTest < ActionDispatch::IntegrationTest
     assert_select 'div.alert.alert-danger'
   end
 
-  test 'login with valid data' do
+  test 'login with valid data and the logout' do
     get login_path
     assert_select 'form[action=?]', login_path
     post login_path, params: {
@@ -31,5 +31,11 @@ class UserLoginTest < ActionDispatch::IntegrationTest
     assert_redirected_to root_path
     follow_redirect!
     assert_select 'div.alert.alert-success'
+    assert_select 'a[href=?]', logout_path
+    delete logout_path
+    assert_redirected_to root_path
+    follow_redirect!
+    assert_select 'div.alert.alert-success'
+    assert_select 'a[href=?]', login_path
   end
 end
