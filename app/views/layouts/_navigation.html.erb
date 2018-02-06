@@ -16,6 +16,9 @@
   <ul class="navbar-nav float-right">
     <% if logged_in? %>
       <li class="nav-item">
+        <%= link_to "My account", account_path, class: 'nav-link' %>
+      </li>
+      <li class="nav-item">
         <%= link_to "Log out", logout_path, method: :delete, class: 'nav-link' %>
       </li>
     <% else %>
