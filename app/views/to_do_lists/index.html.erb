@@ -1,5 +1,14 @@
 <% if @user %>
-  You're logged in. Congratulations <%= @user.email %>
+  <% if @user.to_do_lists.any? %>
+    <div class="row">
+      <% @user.to_do_lists.each do |to_do_list| %>
+        <%= render to_do_list %>
+      <% end %>
+    </div>
+  <% else %>
+    <h3>You don't have any to do lists yet.</h3>
+  <% end %>
+  <%= link_to "Add ToDo List", new_to_do_list_path, class: 'btn btn-primary btn-lg' %>
 <% else %>
   <h3>Log in to see your ToDoLists</h3>
 <% end %>
