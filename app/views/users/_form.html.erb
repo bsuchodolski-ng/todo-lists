@@ -22,10 +22,10 @@
         <%= f.password_field :password_confirmation, class: "form-control" %>
       </div>
       <% if action == 'new' %>
-        <%= f.button 'Create account', class: "btn-primary btn-lg" %>
+        <%= f.button 'Create account', class: "btn btn-primary btn-lg" %>
       <% else %>
-        <%= f.button 'Edit account', class: "btn-primary btn-lg" %>
-        <%= button_to "Delete account", account_path, method: :delete, class: 'btn-danger btn-lg' %>
+        <%= f.button 'Edit account', class: "btn btn-primary btn-lg" %>
+        <%= link_to "Delete account", account_path, method: :delete, class: 'btn btn-danger btn-lg' %>
       <% end %>
     <% end %>
   </div>
