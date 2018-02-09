@@ -75,7 +75,7 @@ class UserTest < ActiveSupport::TestCase
 
   test 'email should be unique' do
     @user.save
-    @another_user = build(:user)
+    @another_user = build(:user, email: @user.email)
     assert_not @another_user.valid?
   end
 
