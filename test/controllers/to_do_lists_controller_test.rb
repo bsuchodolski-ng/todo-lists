@@ -13,18 +13,56 @@ class ToDoListsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
-  # test "should get new" do
-  #   get new_to_do_list_url
-  #   assert_response :success
-  # end
-  #
-  # test "should create to_do_list" do
-  #   assert_difference('ToDoList.count') do
-  #     post to_do_lists_url, params: { to_do_list: {  } }
-  #   end
-  #
-  #   assert_redirected_to to_do_list_url(ToDoList.last)
-  # end
+  test 'new should redirect to login if not logged in' do
+    get new_to_do_list_url
+    assert_not flash.empty?
+    assert_redirected_to login_path
+  end
+
+  test 'should get new if logged in' do
+    log_in_as(@user1)
+    get new_to_do_list_url
+    assert_response :success
+  end
+
+  test 'create should redirect to login if not logged in' do
+    assert_no_difference 'ToDoList.count' do
+      post to_do_lists_url, params: {
+        to_do_list: {
+          title: 'Title',
+          user_id: @user1.id
+        }
+      }
+    end
+    assert_not flash.empty?
+    assert_redirected_to login_path
+  end
+
+  test 'should create to do list if logged in' do
+    log_in_as(@user1)
+    assert_difference 'ToDoList.count', 1 do
+      post to_do_lists_url, params: {
+        to_do_list: {
+          title: 'Title',
+          user_id: @user1.id
+        }
+      }
+    end
+    assert_redirected_to to_do_list_url(ToDoList.last)
+  end
+
+  test 'should not allow user to create to do list for another user' do
+    log_in_as(@user1)
+    assert_difference 'ToDoList.count', 1 do
+      post to_do_lists_url, params: {
+        to_do_list: {
+          title: 'Title',
+          user_id: @user2.id
+        }
+      }
+    end
+    assert ToDoList.last.user_id = @user1.id
+  end
 
   test 'should response with 404 if user not logged in' do
     assert_raises(ActionController::RoutingError) do
