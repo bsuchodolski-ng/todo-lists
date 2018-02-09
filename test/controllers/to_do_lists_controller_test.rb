@@ -39,7 +39,7 @@ class ToDoListsControllerTest < ActionDispatch::IntegrationTest
     end
   end
 
-  test "should show to_do_list if list belongs to user" do
+  test "should show list if list belongs to user" do
     log_in_as(@user1)
     get to_do_list_url(@to_do_list1)
     assert_response :success
