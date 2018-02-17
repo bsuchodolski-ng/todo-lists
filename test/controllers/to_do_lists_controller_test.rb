@@ -64,13 +64,13 @@ class ToDoListsControllerTest < ActionDispatch::IntegrationTest
     assert ToDoList.last.user_id = @user1.id
   end
 
-  test 'should response with 404 if user not logged in' do
+  test 'show should response with 404 if user not logged in' do
     assert_raises(ActionController::RoutingError) do
       get to_do_list_url(@to_do_list1)
     end
   end
 
-  test 'should response with 404 if list does not belong to user' do
+  test 'show should response with 404 if list does not belong to user' do
     log_in_as(@user1)
     assert_raises(ActionController::RoutingError) do
       get to_do_list_url(@to_do_list2)
