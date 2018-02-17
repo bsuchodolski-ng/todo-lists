@@ -77,18 +77,54 @@ class ToDoListsControllerTest < ActionDispatch::IntegrationTest
     end
   end
 
-  test "should show list if list belongs to user" do
+  test 'should show list if list belongs to user' do
     log_in_as(@user1)
     get to_do_list_url(@to_do_list1)
     assert_response :success
   end
 
 
-  # test "should get edit" do
-  #   get edit_to_do_list_url(@to_do_list)
-  #   assert_response :success
-  # end
-  #
+  test 'update should response with 404 if user not logged in' do
+    assert_raises(ActionController::RoutingError) do
+      patch to_do_list_url(@to_do_list1), params: {
+        to_do_list: {
+          title: 'New title'
+        }
+      }
+    end
+  end
+
+  test 'update should response with 404 if list does not belong to user' do
+    log_in_as(@user1)
+    assert_raises(ActionController::RoutingError) do
+      patch to_do_list_url(@to_do_list2), params: {
+        to_do_list: {
+          title: 'New title'
+        }
+      }
+    end
+  end
+
+  test 'update should update to do list for logged in user' do
+    log_in_as(@user1)
+    patch to_do_list_url(@to_do_list1), params: {
+      to_do_list: {
+        title: 'New title'
+      }
+    }
+    assert @to_do_list1.reload.title == 'New title'
+  end
+
+  test 'update should respond with 422' do
+    log_in_as(@user1)
+    patch to_do_list_url(@to_do_list1), params: {
+      to_do_list: {
+        title: ''
+      }
+    }
+    assert_response(422)
+  end
+
   # test "should update to_do_list" do
   #   patch to_do_list_url(@to_do_list), params: { to_do_list: {  } }
   #   assert_redirected_to to_do_list_url(@to_do_list)

@@ -1,7 +1,7 @@
 class ToDoListsController < ApplicationController
 
-  before_action :list_belongs_to_user, only: [:show]
-  before_action :logged_in_user, only: [:new, :create]
+  before_action :list_belongs_to_user, only: [:show, :update]
+  before_action :logged_in_user, only: [:new, :create, :update]
 
   def index
     @user = current_user
@@ -24,6 +24,13 @@ class ToDoListsController < ApplicationController
       render 'new'
     end
   end
+
+  def update
+    @to_do_list = ToDoList.find(params[:id])
+    @to_do_list.update(to_do_list_params)
+    respond_with_bip(@to_do_list)
+  end
+
 
   private
 
