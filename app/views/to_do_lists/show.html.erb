@@ -1,1 +1,2 @@
-<%= best_in_place @to_do_list, :title %>
+<%= best_in_place @to_do_list, :title, class: 'h3'%>
+<%= link_to "Delete this list", to_do_list_path(@to_do_list), method: :delete, class: 'btn btn-danger' %>

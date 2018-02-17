@@ -1,7 +1,7 @@
 class ToDoListsController < ApplicationController
 
-  before_action :list_belongs_to_user, only: [:show, :update]
-  before_action :logged_in_user, only: [:new, :create, :update]
+  before_action :list_belongs_to_user, only: [:show, :update, :destroy]
+  before_action :logged_in_user, only: [:new, :create]
 
   def index
     @user = current_user
@@ -31,6 +31,12 @@ class ToDoListsController < ApplicationController
     respond_with_bip(@to_do_list)
   end
 
+  def destroy
+    @to_do_list = ToDoList.find(params[:id])
+    @to_do_list.destroy
+    flash[:danger] = 'To do list was successfully deleted.'
+    redirect_to to_do_lists_path
+  end
 
   private
 

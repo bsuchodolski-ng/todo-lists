@@ -115,7 +115,7 @@ class ToDoListsControllerTest < ActionDispatch::IntegrationTest
     assert @to_do_list1.reload.title == 'New title'
   end
 
-  test 'update should respond with 422' do
+  test 'update should respond with 422 if title is not present' do
     log_in_as(@user1)
     patch to_do_list_url(@to_do_list1), params: {
       to_do_list: {
@@ -125,16 +125,24 @@ class ToDoListsControllerTest < ActionDispatch::IntegrationTest
     assert_response(422)
   end
 
-  # test "should update to_do_list" do
-  #   patch to_do_list_url(@to_do_list), params: { to_do_list: {  } }
-  #   assert_redirected_to to_do_list_url(@to_do_list)
-  # end
-  #
-  # test "should destroy to_do_list" do
-  #   assert_difference('ToDoList.count', -1) do
-  #     delete to_do_list_url(@to_do_list)
-  #   end
-  #
-  #   assert_redirected_to to_do_lists_url
-  # end
+  test 'destroy should response with 404 if user not logged in' do
+    assert_raises(ActionController::RoutingError) do
+      delete to_do_list_url(@to_do_list1)
+    end
+  end
+
+  test 'destroy should response with 404 if list does not belong to user' do
+    log_in_as(@user1)
+    assert_raises(ActionController::RoutingError) do
+      delete to_do_list_url(@to_do_list2)
+    end
+  end
+
+  test 'should destroy list if list belongs to user' do
+    log_in_as(@user1)
+    assert_difference 'ToDoList.count', -1 do
+      delete to_do_list_url(@to_do_list1)
+    end
+    assert_redirected_to to_do_lists_url
+  end
 end
