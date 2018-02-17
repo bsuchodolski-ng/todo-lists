@@ -15,10 +15,9 @@
 //= require turbolinks
 //= require popper
 //= require bootstrap
-//= require_tree .
 //= require best_in_place
+//= require_tree .
 
-$(document).ready(function() {
-  /* Activating Best In Place */
+document.addEventListener("turbolinks:load", function() {
   jQuery(".best_in_place").best_in_place();
-});
+})
