@@ -51,7 +51,7 @@ class ToDoListsControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to to_do_list_url(ToDoList.last)
   end
 
-  test 'should not allow user to create to do list for another user' do
+  test 'should always create to do list for the logged in user' do
     log_in_as(@user1)
     assert_difference 'ToDoList.count', 1 do
       post to_do_lists_url, params: {
