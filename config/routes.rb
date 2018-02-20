@@ -8,5 +8,7 @@ Rails.application.routes.draw do
   get '/login', to: 'sessions#new'
   post '/login', to: 'sessions#create'
   delete '/logout', to: 'sessions#destroy'
-  resources :to_do_lists
+  resources :to_do_lists, only: [:index, :new, :create, :show, :update, :destroy] do
+    resources :to_do_list_items, only: [:create, :update, :destroy]
+  end
 end
