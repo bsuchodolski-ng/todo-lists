@@ -43,4 +43,8 @@ class ToDoListsController < ApplicationController
     def to_do_list_params
       params.require(:to_do_list).permit(:title)
     end
+
+    def to_do_list
+      @to_do_list ||= ToDoList.find(params[:id])
+    end
 end
