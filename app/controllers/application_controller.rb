@@ -13,4 +13,14 @@ class ApplicationController < ActionController::Base
         redirect_to login_path
       end
     end
+
+    def to_do_list
+      @to_do_list ||= params[:id].nil? ? ToDoList.find(params[:to_do_list_id]) : ToDoList.find(params[:id])
+    end
+
+    def list_belongs_to_user
+      unless logged_in? && current_user.to_do_lists.include?(to_do_list)
+        not_found
+      end
+    end
 end

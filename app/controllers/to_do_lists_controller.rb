@@ -40,17 +40,7 @@ class ToDoListsController < ApplicationController
 
   private
 
-    def to_do_list
-      @to_do_list ||= ToDoList.find(params[:id])
-    end
-
     def to_do_list_params
       params.require(:to_do_list).permit(:title)
-    end
-
-    def list_belongs_to_user
-      unless logged_in? && current_user.to_do_lists.include?(to_do_list)
-        not_found
-      end
     end
 end
