@@ -32,6 +32,19 @@ class ToDoListItemsControllerTest < ActionDispatch::IntegrationTest
     end
   end
 
+  test 'create should return errors in json if validation fails' do
+    log_in_as(@user1)
+    assert_no_difference 'ToDoListItem.count' do
+      post to_do_list_to_do_list_items_url(@to_do_list1), xhr: true, params: {
+        to_do_list_item: {
+          content: ''
+        }
+      }
+    end
+    assert_response(422)
+    assert_equal '{"content":["can\'t be blank"]}', response.body
+  end
+
   test 'create should respond with 404 if to do list does not belong to user' do
     assert_raises(ActionController::RoutingError) do
       log_in_as(@user1)
