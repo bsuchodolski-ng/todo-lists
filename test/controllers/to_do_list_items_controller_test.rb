@@ -7,6 +7,7 @@ class ToDoListItemsControllerTest < ActionDispatch::IntegrationTest
     @user2 = create(:user)
     @to_do_list1 = create(:to_do_list, user: @user1)
     @to_do_list2 = create(:to_do_list, user: @user2)
+    @to_do_list3 = create(:to_do_list, user: @user1)
     @to_do_list_item1 = create(:to_do_list_item, to_do_list: @to_do_list1)
     @to_do_list_item2 = create(:to_do_list_item, to_do_list: @to_do_list2)
   end
@@ -48,7 +49,7 @@ class ToDoListItemsControllerTest < ActionDispatch::IntegrationTest
   test 'create should respond with 404 if to do list does not belong to user' do
     assert_raises(ActionController::RoutingError) do
       log_in_as(@user1)
-      post to_do_list_to_do_list_items_url(@to_do_list2, @to_do_list_item2), xhr: true, params: {
+      post to_do_list_to_do_list_items_url(@to_do_list2), xhr: true, params: {
         to_do_list_item: {
           content: 'New item'
         }
@@ -96,4 +97,43 @@ class ToDoListItemsControllerTest < ActionDispatch::IntegrationTest
     }
     assert_response(422)
   end
+
+  test 'update should find item only if it belongs to the list' do
+    log_in_as(@user1)
+    assert_raises(ActiveRecord::RecordNotFound) do
+      patch to_do_list_to_do_list_item_url(@to_do_list3, @to_do_list_item1), params: {
+        to_do_list_item: {
+          content: 'New item title'
+        }
+      }
+    end
+  end
+
+  test 'destroy should response with 404 if user not logged in' do
+    assert_raises(ActionController::RoutingError) do
+      delete to_do_list_to_do_list_item_url(@to_do_list1, @to_do_list_item1), xhr: true
+    end
+  end
+
+  test 'destroy should response with 404 if list does not belong to user' do
+    log_in_as(@user1)
+    assert_raises(ActionController::RoutingError) do
+      delete to_do_list_to_do_list_item_url(@to_do_list2, @to_do_list_item2), xhr: true
+    end
+  end
+
+  test 'should destroy list if list belongs to user' do
+    log_in_as(@user1)
+    assert_difference 'ToDoListItem.count', -1 do
+      delete to_do_list_to_do_list_item_url(@to_do_list1, @to_do_list_item1), xhr: true
+    end
+  end
+
+  test 'destroy should find item only if it belongs to the list' do
+    log_in_as(@user1)
+    assert_raises(ActiveRecord::RecordNotFound) do
+      delete to_do_list_to_do_list_item_url(@to_do_list3, @to_do_list_item1), xhr: true
+    end
+  end
+
 end
