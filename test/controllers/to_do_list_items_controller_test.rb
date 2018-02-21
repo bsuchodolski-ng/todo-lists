@@ -59,7 +59,7 @@ class ToDoListItemsControllerTest < ActionDispatch::IntegrationTest
 
   test 'update should response with 404 if user not logged in' do
     assert_raises(ActionController::RoutingError) do
-      patch to_do_list_to_do_list_item_url(@to_do_list1, @to_do_list_item1), params: {
+      patch to_do_list_item_url(@to_do_list_item1), params: {
         to_do_list_item: {
           content: 'New item title'
         }
@@ -67,10 +67,10 @@ class ToDoListItemsControllerTest < ActionDispatch::IntegrationTest
     end
   end
 
-  test 'update should response with 404 if list does not belong to user' do
+  test 'update should response with 404 if item does not belong to user' do
     log_in_as(@user1)
     assert_raises(ActionController::RoutingError) do
-      patch to_do_list_to_do_list_item_url(@to_do_list2, @to_do_list_item2), params: {
+      patch to_do_list_item_url(@to_do_list_item2), params: {
         to_do_list_item: {
           content: 'New item title'
         }
@@ -78,9 +78,9 @@ class ToDoListItemsControllerTest < ActionDispatch::IntegrationTest
     end
   end
 
-  test 'update should update to do list for logged in user' do
+  test 'update should update item for logged in user' do
     log_in_as(@user1)
-    patch to_do_list_to_do_list_item_url(@to_do_list1, @to_do_list_item1), params: {
+    patch to_do_list_item_url(@to_do_list_item1), params: {
       to_do_list_item: {
         content: 'New item title'
       }
@@ -88,9 +88,9 @@ class ToDoListItemsControllerTest < ActionDispatch::IntegrationTest
     assert @to_do_list_item1.reload.content == 'New item title'
   end
 
-  test 'update should respond with 422 if title is not present' do
+  test 'update should respond with 422 if content is not present' do
     log_in_as(@user1)
-    patch to_do_list_to_do_list_item_url(@to_do_list1, @to_do_list_item1), params: {
+    patch to_do_list_item_url(@to_do_list_item1), params: {
       to_do_list_item: {
         content: ''
       }
@@ -98,41 +98,23 @@ class ToDoListItemsControllerTest < ActionDispatch::IntegrationTest
     assert_response(422)
   end
 
-  test 'update should find item only if it belongs to the list' do
-    log_in_as(@user1)
-    assert_raises(ActiveRecord::RecordNotFound) do
-      patch to_do_list_to_do_list_item_url(@to_do_list3, @to_do_list_item1), params: {
-        to_do_list_item: {
-          content: 'New item title'
-        }
-      }
-    end
-  end
-
   test 'destroy should response with 404 if user not logged in' do
     assert_raises(ActionController::RoutingError) do
-      delete to_do_list_to_do_list_item_url(@to_do_list1, @to_do_list_item1), xhr: true
+      delete to_do_list_item_url(@to_do_list_item1), xhr: true
     end
   end
 
-  test 'destroy should response with 404 if list does not belong to user' do
+  test 'destroy should response with 404 if item does not belong to user' do
     log_in_as(@user1)
     assert_raises(ActionController::RoutingError) do
-      delete to_do_list_to_do_list_item_url(@to_do_list2, @to_do_list_item2), xhr: true
+      delete to_do_list_item_url(@to_do_list_item2), xhr: true
     end
   end
 
-  test 'should destroy list if list belongs to user' do
+  test 'should destroy item if item belongs to user' do
     log_in_as(@user1)
     assert_difference 'ToDoListItem.count', -1 do
-      delete to_do_list_to_do_list_item_url(@to_do_list1, @to_do_list_item1), xhr: true
-    end
-  end
-
-  test 'destroy should find item only if it belongs to the list' do
-    log_in_as(@user1)
-    assert_raises(ActiveRecord::RecordNotFound) do
-      delete to_do_list_to_do_list_item_url(@to_do_list3, @to_do_list_item1), xhr: true
+      delete to_do_list_item_url(@to_do_list_item1), xhr: true
     end
   end
 

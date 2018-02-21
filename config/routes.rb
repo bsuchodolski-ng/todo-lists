@@ -9,6 +9,6 @@ Rails.application.routes.draw do
   post '/login', to: 'sessions#create'
   delete '/logout', to: 'sessions#destroy'
   resources :to_do_lists, only: [:index, :new, :create, :show, :update, :destroy] do
-    resources :to_do_list_items, only: [:create, :update, :destroy]
+    resources :to_do_list_items, only: [:create, :update, :destroy], shallow: true
   end
 end
