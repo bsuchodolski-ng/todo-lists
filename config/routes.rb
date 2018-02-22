@@ -11,4 +11,6 @@ Rails.application.routes.draw do
   resources :to_do_lists, only: [:index, :new, :create, :show, :update, :destroy] do
     resources :to_do_list_items, only: [:create, :update, :destroy], shallow: true
   end
+  patch 'to_do_list_items/:id/done', to: 'to_do_list_items#done', as: :to_do_list_item_done
+
 end

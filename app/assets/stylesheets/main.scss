@@ -13,10 +13,7 @@ footer {
   margin-top: 25px;
 }
 
-td {
-  width: auto;
-}
-
-.best_in_place {
-  display: block;
+tr.done {
+  text-decoration: line-through;
+  color: #808080;
 }

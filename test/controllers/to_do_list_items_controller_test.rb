@@ -118,4 +118,35 @@ class ToDoListItemsControllerTest < ActionDispatch::IntegrationTest
     end
   end
 
+  test 'done should response with 404 if user not logged in' do
+    assert_raises(ActionController::RoutingError) do
+      patch to_do_list_item_done_url(@to_do_list_item1), xhr: true, params: {
+        to_do_list_item: {
+          done: true
+        }
+      }
+    end
+  end
+
+  test 'done should response with 404 if item does not belong to user' do
+    log_in_as(@user1)
+    assert_raises(ActionController::RoutingError) do
+      patch to_do_list_item_done_url(@to_do_list_item2), xhr: true, params: {
+        to_do_list_item: {
+          done: true
+        }
+      }
+    end
+  end
+
+  test 'done should update item for logged in user' do
+    log_in_as(@user1)
+    patch to_do_list_item_done_url(@to_do_list_item1), xhr: true, params: {
+      to_do_list_item: {
+        done: true
+      }
+    }
+    assert @to_do_list_item1.reload.done?
+  end
+
 end

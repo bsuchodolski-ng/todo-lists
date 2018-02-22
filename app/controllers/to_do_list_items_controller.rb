@@ -1,7 +1,7 @@
 class ToDoListItemsController < ApplicationController
 
   before_action :list_belongs_to_user, only: [:create]
-  before_action :item_belongs_to_user, only: [:update, :destroy]
+  before_action :item_belongs_to_user, only: [:update, :destroy, :done]
 
   def create
     @to_do_list_item = ToDoListItem.new(to_do_list_item_params.merge(to_do_list_id: params[:to_do_list_id]))
@@ -20,6 +20,14 @@ class ToDoListItemsController < ApplicationController
     respond_with_bip(@to_do_list_item)
   end
 
+  def done
+    respond_to do |format|
+      @to_do_list_item = ToDoListItem.find(params[:id])
+      @to_do_list_item.update(to_do_list_item_done_params)
+      format.js
+    end
+  end
+
   def destroy
     respond_to do |format|
       @to_do_list_item = ToDoListItem.find(params[:id])
@@ -31,6 +39,10 @@ class ToDoListItemsController < ApplicationController
   private
     def to_do_list_item_params
       params.require(:to_do_list_item).permit(:content)
+    end
+
+    def to_do_list_item_done_params
+      params.require(:to_do_list_item).permit(:done)
     end
 
     def to_do_list

@@ -1,0 +1,5 @@
+<% if @to_do_list_item.done? %>
+$("#to_do_list_item<%= @to_do_list_item.id %>").addClass("done")
+<% else %>
+$("#to_do_list_item<%= @to_do_list_item.id %>").removeClass("done")
+<% end %>
