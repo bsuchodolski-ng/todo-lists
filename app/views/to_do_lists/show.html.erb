@@ -1,11 +1,15 @@
-<%= best_in_place @to_do_list, :title, class: 'h3'%>
-<ul class="to_do_list_items">
-  <% if @to_do_list.to_do_list_items.any? %>
-    <%= render @to_do_list.to_do_list_items %>
-  <% end %>
-</ul>
-<%= form_with(model: ToDoListItem.new, url: to_do_list_to_do_list_items_url(@to_do_list)) do |f| %>
-  <%= f.text_field :content, required: true %>
-  <%= f.submit 'Add new list item', class: 'btn btn-primary', data: { disable_with: 'Adding...' } %>
-<% end %>
-<%= link_to "Delete this list", to_do_list_path(@to_do_list), method: :delete, class: 'btn btn-danger' %>
+<div class="row">
+  <div class="col-sm-12">
+    <%= best_in_place @to_do_list, :title, class: 'h3', inner_class: 'form-control' %>
+    <table class="table table-hover to_do_list_items">
+      <% if @to_do_list.to_do_list_items.any? %>
+        <%= render @to_do_list.to_do_list_items %>
+      <% end %>
+    </table>
+    <%= form_with(model: ToDoListItem.new, url: to_do_list_to_do_list_items_url(@to_do_list)) do |f| %>
+      <%= f.text_field :content, required: true, class: 'form-control' %>
+      <%= f.submit 'Add new list item', class: 'btn btn-primary btn-block', data: { disable_with: 'Adding...' } %>
+    <% end %>
+    <%= link_to "Delete this list", to_do_list_path(@to_do_list), method: :delete, class: 'btn btn-danger btn-block' %>
+  </div>
+</div>

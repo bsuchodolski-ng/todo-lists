@@ -1,6 +1,6 @@
 to_do_list = $("<%= escape_javascript(render @to_do_list_item) %>");
 to_do_list.hide();
-$('ul.to_do_list_items').append(to_do_list);
+$('table.to_do_list_items').append(to_do_list);
 $('input[name="to_do_list_item[content]"]').val('');
 to_do_list.show('slow');
 jQuery('.best_in_place').best_in_place();
