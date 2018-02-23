@@ -43,7 +43,8 @@ class ToDoListItemsControllerTest < ActionDispatch::IntegrationTest
       }
     end
     assert_response(422)
-    assert_equal '{"content":["can\'t be blank"]}', response.body
+    response_json = JSON.parse(response.body)
+    assert_equal ["can\'t be blank"], response_json['content']
   end
 
   test 'create should respond with 404 if to do list does not belong to user' do
