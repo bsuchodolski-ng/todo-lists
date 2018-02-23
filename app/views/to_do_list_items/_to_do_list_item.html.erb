@@ -1,7 +1,6 @@
 <tr id="to_do_list_item<%= to_do_list_item.id %>" class="<%= 'done' if to_do_list_item.done? %>">
   <td>
       <%= form_with model: to_do_list_item, url: to_do_list_item_done_url(to_do_list_item) do |f| %>
-        <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
         <%= f.check_box :done %>
         <%= f.submit 'Send', style: 'display: none'  %>
       <% end %>
