@@ -33,4 +33,14 @@ class UserToDoListsTest < ActionDispatch::IntegrationTest
     end
   end
 
+  test 'count of list elements is displayed in the card' do
+    @to_do_list = create(:to_do_list, user: @user)
+    3.times do
+      create(:to_do_list_item, to_do_list: @to_do_list)
+    end
+    log_in_as(@user)
+    get root_path
+    assert_select ".card p", text: "3 items"
+  end
+
 end
