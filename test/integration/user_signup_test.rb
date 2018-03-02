@@ -3,34 +3,28 @@ require 'test_helper'
 class UserSignupTest < ActionDispatch::IntegrationTest
 
   test 'sign up with invalid data' do
-    get signup_path
-    assert_select 'form[action=?]', signup_path
+    visit signup_path
+    page.assert_selector("form[action='#{signup_path}']")
     assert_no_difference 'User.count' do
-      post signup_path, params: {
-        user: {
-          email: "",
-          password: "pass",
-          password_confirmation: "word"
-        }
-      }
+      fill_in('user_email', with: '')
+      fill_in('user_password', with: 'pass')
+      fill_in('user_password_confirmation', with: 'word')
+      click_on('Create account')
     end
-    assert_template 'users/new'
-    assert_select 'div.alert.alert-danger', count: 4
+    page.assert_selector 'div.alert.alert-danger', count: 4
   end
 
   test 'sign up with valid data' do
-    get signup_path
-    assert_difference 'User.count', 1 do
-      post signup_path, params: {
-        user: {
-          email: 'user@example.com',
-          password: 'password',
-          password_confirmation: 'password'
-        }
-      }
+    visit signup_path
+    page.assert_selector("form[action='#{signup_path}']")
+    assert_no_difference 'User.count' do
+      fill_in('user_email', with: 'user@example.com')
+      fill_in('user_password', with: 'password')
+      fill_in('user_password_confirmation', with: 'password')
+      click_on('Create account')
     end
-    follow_redirect!
-    assert_template 'to_do_lists/index'
-    assert_select 'div.alert.alert-success'
+    page.assert_selector 'div.alert.alert-success'
+    page.assert_text "You don't have any to do lists yet."
   end
+
 end
