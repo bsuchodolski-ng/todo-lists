@@ -17,13 +17,13 @@ class UserSignupTest < ActionDispatch::IntegrationTest
   test 'sign up with valid data' do
     visit signup_path
     page.assert_selector("form[action='#{signup_path}']")
-    assert_no_difference 'User.count' do
+    assert_difference 'User.count', 1 do
       fill_in('user_email', with: 'user@example.com')
       fill_in('user_password', with: 'password')
       fill_in('user_password_confirmation', with: 'password')
       click_on('Create account')
+      page.assert_selector 'div.alert.alert-success'
     end
-    page.assert_selector 'div.alert.alert-success'
     page.assert_text "You don't have any to do lists yet."
   end
 
