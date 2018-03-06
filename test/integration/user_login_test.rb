@@ -7,35 +7,29 @@ class UserLoginTest < ActionDispatch::IntegrationTest
   end
 
   test 'login with invalid data' do
-    get login_path
-    assert_select 'form[action=?]', login_path
-    post login_path, params: {
-      session: {
-        email: @user.email,
-        password: 'wrong_password'
-      }
-    }
-    assert_template 'sessions/new'
-    assert_select 'div.alert.alert-danger'
+    visit login_path
+    fill_in('session_email', with: '')
+    fill_in('session_password', with: 'pass')
+    within("form[action='#{login_path}']") do
+      click_on('Log in')
+    end
+    assert_selector 'div.alert.alert-danger'
+    assert_selector "form[action='#{login_path}']"
   end
 
   test 'login with valid data and the logout' do
-    get login_path
-    assert_select 'form[action=?]', login_path
-    post login_path, params: {
-      session: {
-        email: @user.email,
-        password: @user.password
-      }
-    }
-    assert_redirected_to root_path
-    follow_redirect!
-    assert_select 'div.alert.alert-success'
-    assert_select 'a[href=?]', logout_path
-    delete logout_path
-    assert_redirected_to root_path
-    follow_redirect!
-    assert_select 'div.alert.alert-success'
-    assert_select 'a[href=?]', login_path
+    visit login_path
+    fill_in('session_email', with: @user.email)
+    fill_in('session_password', with: @user.password)
+    within("form[action='#{login_path}']") do
+      click_on('Log in')
+    end
+    page.assert_selector 'div.alert.alert-success'
+    page.assert_text "You don't have any to do lists yet."
+    assert_selector "a[href='#{logout_path}']"
+    page.find("a[href='/logout']").trigger("click")
+    page.assert_text "Log in to see your ToDoLists"
+    assert_selector 'div.alert.alert-success'
+    assert_selector "a[href='#{login_path}']"
   end
 end
