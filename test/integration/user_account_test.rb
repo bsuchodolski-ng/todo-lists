@@ -7,40 +7,34 @@ class UserAccountTest < ActionDispatch::IntegrationTest
   end
 
   test 'edit account when not logged in' do
-    get account_path
-    assert_redirected_to login_path
-    follow_redirect!
-    assert_select 'div.alert.alert-danger'
+    visit account_path
+    page.assert_text 'Log in'
+    page.assert_selector '#session_email'
+    page.assert_selector '#session_password'
+    assert_selector 'div.alert.alert-danger'
   end
 
   test 'edit account with invalid data' do
-    log_in_as(@user)
-    get account_path
-    assert_select 'form[action=?]', account_path
-    patch account_path, params: {
-      user: {
-        email: "",
-        password: "pass",
-        password_confirmation: "word"
-      }
-    }
-    assert_template 'users/edit'
-    assert_select 'div.alert.alert-danger', count: 4
+    login(@user)
+    visit account_path
+    assert_selector("form[action='#{account_path}']")
+    fill_in('user_email', with: '')
+    fill_in('user_password', with: 'pass')
+    fill_in('user_password_confirmation', with: 'word')
+    click_on('Edit account')
+    assert_selector 'div.alert.alert-danger', count: 4
+    assert_selector("form[action='#{account_path}']")
   end
 
   test 'edit account with valid data' do
-    log_in_as(@user)
-    get account_path
-    patch account_path, params: {
-      user: {
-        email: 'user@example2.com',
-        password: 'password2',
-        password_confirmation: 'password2'
-      }
-    }
-    follow_redirect!
-    assert_template 'edit'
-    assert_select 'div.alert.alert-success'
-    assert @user.email = 'user@example2.com'
+    login(@user)
+    visit account_path
+    fill_in('user_email', with: 'user_edited@example.com')
+    fill_in('user_password', with: 'password')
+    fill_in('user_password_confirmation', with: 'password')
+    click_on('Edit account')
+    assert_selector 'div.alert.alert-success'
+    assert_selector("form[action='#{account_path}']")
+    assert @user.email = 'user_edited@example.com'
   end
 end
