@@ -44,4 +44,57 @@ class UserToDoListsTest < ActionDispatch::IntegrationTest
     visit root_path
     assert_selector '.card p', text: "#{@to_do_list.to_do_list_items.count} items"
   end
+
+  test 'complete to do list flow with adding and deleting to do list items' do
+    login(@user)
+    visit root_path
+    # Adding new ToDo List
+    click_on('Add ToDo List')
+    click_on('Create ToDo list')
+    assert_text 'Title can\'t be blank'
+    fill_in 'to_do_list_title', with: 'Test title'
+    click_on('Create ToDo list')
+    # Changing ToDo List title in place
+    assert_text 'Test title'
+    @to_do_list = ToDoList.last
+    bip_text(@to_do_list, :title, '')
+    assert_text 'Test title'
+    bip_text(@to_do_list, :title, 'Title edited')
+    assert_text 'Title edited'
+    # Adding new ToDo list item
+    assert_no_difference 'ToDoListItem.count' do
+      fill_in 'to_do_list_item[content]', with: ''
+      click_on('Add new list item')
+    end
+    fill_in 'to_do_list_item[content]', with: 'New to do list item'
+    click_on('Add new list item')
+    within '#to_do_list_item1' do
+      assert_text 'New to do list item'
+    end
+    # Editing ToDo list item
+    @to_do_list_item = ToDoListItem.last
+    bip_text(@to_do_list_item, :content, '')
+    within '#to_do_list_item1' do
+      assert_text 'New to do list item'
+    end
+    bip_text(@to_do_list_item, :content, 'Item edited')
+    within '#to_do_list_item1' do
+      assert_text 'Item edited'
+    end
+    # Marking ToDo list item as done
+    page.find('input[name="to_do_list_item[done]"]').click
+    assert page.find('#to_do_list_item1')[:class].include?('done')
+    # Unmarking ToDo list item as done
+    page.find('input[name="to_do_list_item[done]"]').click
+    assert_not page.find('#to_do_list_item1')[:class].include?('done')
+    # Deleting ToDo list item
+    within '#to_do_list_item1' do
+      click_on('Delete')
+    end
+    assert_no_selector '#to_do_list_item1'
+    # Deleting ToDo list
+    click_on('Delete this list')
+    assert_text 'You don\'t have any to do lists yet.'
+    assert_selector '.alert.alert-danger', text: 'To do list was successfully deleted.'
+  end
 end

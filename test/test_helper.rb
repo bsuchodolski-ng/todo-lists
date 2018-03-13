@@ -2,6 +2,8 @@ require File.expand_path('../../config/environment', __FILE__)
 require 'rails/test_help'
 require 'capybara/rails'
 require 'capybara/minitest'
+require 'best_in_place'
+require 'best_in_place/test_helpers'
 
 class ActiveSupport::TestCase
   include FactoryBot::Syntax::Methods
@@ -14,6 +16,8 @@ class ActionDispatch::IntegrationTest
   include Capybara::Minitest::Assertions
   # Set webkit as default driver
   Capybara.default_driver = :webkit
+
+  include BestInPlace::TestHelpers
 
   # Reset sessions and driver between tests
   # Use super wherever this method is redefined in your individual test classes
