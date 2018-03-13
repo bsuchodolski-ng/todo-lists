@@ -7,29 +7,31 @@ class UserToDoListsTest < ActionDispatch::IntegrationTest
   end
 
   test 'no lists displayed if user is not logged in' do
-    get root_path
-    assert_select "h3", "Log in to see your ToDoLists"
-    assert_select ".card", false
-    assert_select "a[href=?]", new_to_do_list_path, false
+    visit root_path
+    within 'h3' do
+      assert_text 'Log in to see your ToDoLists'
+    end
   end
 
   test 'prompt and add button displayed when logged in but doesn\'t have any lists' do
-    log_in_as(@user)
-    get root_path
-    assert_select "h3", "You don't have any to do lists yet."
-    assert_select ".card", false
-    assert_select "a[href=?]", new_to_do_list_path
+    login(@user)
+    visit root_path
+    within 'h3' do
+      assert_text 'You don\'t have any to do lists yet.'
+    end
+    assert_no_selector '.card'
+    assert_selector "a[href='#{new_to_do_list_path}']"
   end
 
   test 'all lists displayed with titles for logged in user' do
     10.times do
       create(:to_do_list, user: @user)
     end
-    log_in_as(@user)
-    get root_path
+    login(@user)
+    visit root_path
     @user.to_do_lists.each do |to_do_list|
-      assert_select "a[href=?]", to_do_list_path(to_do_list)
-      assert_select ".card h4", text: to_do_list.title
+      assert_selector "a[href='#{to_do_list_path(to_do_list)}']"
+      assert_selector '.card h4', text: to_do_list.title
     end
   end
 
@@ -38,9 +40,8 @@ class UserToDoListsTest < ActionDispatch::IntegrationTest
     3.times do
       create(:to_do_list_item, to_do_list: @to_do_list)
     end
-    log_in_as(@user)
-    get root_path
-    assert_select ".card p", text: "3 items"
+    login(@user)
+    visit root_path
+    assert_selector '.card p', text: "#{@to_do_list.to_do_list_items.count} items"
   end
-
 end
