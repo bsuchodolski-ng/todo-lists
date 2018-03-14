@@ -18,7 +18,7 @@ class ToDoListsController < ApplicationController
   def create
     @to_do_list = current_user.to_do_lists.new(to_do_list_params)
     if @to_do_list.save
-      flash[:success] = 'ToDo list was successfuly created'
+      flash[:success] = I18n.t('to_do_list.flashes.list_created')
       redirect_to to_do_list_path(@to_do_list)
     else
       render 'new'
@@ -34,7 +34,7 @@ class ToDoListsController < ApplicationController
   def destroy
     @to_do_list = ToDoList.find(params[:id])
     @to_do_list.destroy
-    flash[:danger] = 'To do list was successfully deleted.'
+    flash[:danger] = I18n.t('to_do_list.flashes.list_deleted')
     redirect_to to_do_lists_path
   end
 

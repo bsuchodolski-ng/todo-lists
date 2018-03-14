@@ -1,0 +1,6 @@
+---
+en:
+  to_do_list:
+    flashes:
+      list_created: "ToDo list was successfuly created"
+      list_deleted: "To do list was successfully deleted."

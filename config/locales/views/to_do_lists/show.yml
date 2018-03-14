@@ -1,6 +1,7 @@
+---
 en:
-  to_do_list_item:
-    add_btn: 'Add new list item'
-    adding: 'Adding...'
   to_do_list:
-    delete_btn: 'Delete this list'
+    delete_btn: "Delete this list"
+  to_do_list_item:
+    add_btn: "Add new list item"
+    adding: Adding...

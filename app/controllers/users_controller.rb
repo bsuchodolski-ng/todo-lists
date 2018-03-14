@@ -9,7 +9,7 @@ class UsersController < ApplicationController
   def create
     @user = User.new(user_params)
     if @user.save
-      flash[:success] = 'Your account was successfuly created'
+      flash[:success] = I18n.t('user.flashes.account_created')
       log_in @user
       redirect_to root_url
     else
@@ -24,7 +24,7 @@ class UsersController < ApplicationController
   def update
     @user = current_user
     if @user.update_attributes(user_params)
-      flash[:success] = 'Your account was successfully saved.'
+      flash[:success] = I18n.t('user.flashes.account_saved')
       redirect_to account_path
     else
       render 'edit'
@@ -35,7 +35,7 @@ class UsersController < ApplicationController
     @user = current_user
     log_out
     @user.destroy
-    flash[:danger] = 'Your account was successfully deleted.'
+    flash[:danger] = I18n.t('user.flashes.account_deleted')
     redirect_to root_path
   end
 

@@ -1,0 +1,7 @@
+---
+en:
+  session:
+    flashes:
+      logged_in: "You are logged in now."
+      logged_out: "You are logged out now."
+      wrong_credentials: "Wrong email or password"

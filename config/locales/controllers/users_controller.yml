@@ -1,0 +1,7 @@
+---
+en:
+  user:
+    flashes:
+      account_created: "Your account was successfuly created."
+      account_deleted: "Your account was successfully deleted."
+      account_saved: "Your account was successfully saved."

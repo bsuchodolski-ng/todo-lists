@@ -1,6 +1,7 @@
+---
 en:
   user:
-    sign_up: 'Sign up'
-    edit_account: 'Edit account'
-    create: 'Create account'
-    edit: 'Delete account'
+    create: "Create account"
+    edit_account: "Edit account"
+    delete_account: "Delete account"
+    sign_up: "Sign up"
