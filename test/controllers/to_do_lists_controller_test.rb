@@ -77,10 +77,11 @@ class ToDoListsControllerTest < ActionDispatch::IntegrationTest
     end
   end
 
-  test 'should show list if list belongs to user' do
+  test 'should show list if list belongs to user and stores its id in session' do
     log_in_as(@user1)
     get to_do_list_url(@to_do_list1)
     assert_response :success
+    assert session[:last_list_id] == @to_do_list1.id
   end
 
 

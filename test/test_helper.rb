@@ -37,8 +37,12 @@ class ActionDispatch::IntegrationTest
 
   def login(user)
     visit login_path
-    fill_in("session_email", with: user.email)
-    fill_in("session_password", with: user.password)
-    click_button("Log in")
+    fill_in('session_email', with: user.email)
+    fill_in('session_password', with: user.password)
+    click_button('Log in')
+  end
+
+  def logout
+    page.find("a[href='/logout']").trigger("click")
   end
 end

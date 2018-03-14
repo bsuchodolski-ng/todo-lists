@@ -8,7 +8,7 @@ class ToDoListsController < ApplicationController
   end
 
   def show
-    to_do_list
+    session[:last_list_id] = to_do_list.id
   end
 
   def new

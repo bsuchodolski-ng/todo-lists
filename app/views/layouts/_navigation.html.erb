@@ -4,9 +4,11 @@
       <li class="nav-item">
         <%= link_to I18n.t('nav_links.my_lists'), root_path, class: 'nav-link' %>
       </li>
-      <li class="nav-item">
-        <%= link_to I18n.t('nav_links.last_list'), '#', class: 'nav-link' %>
-      </li>
+      <% unless last_list.nil?  %>
+        <li class="nav-item">
+          <%= link_to I18n.t('nav_links.last_list'), to_do_list_path(last_list), class: 'nav-link' %>
+        </li>
+      <% end %>
     <% else %>
       <li class="nav-item">
         <%= link_to I18n.t('nav_links.sign_up'), signup_path, class: 'nav-link' %>
