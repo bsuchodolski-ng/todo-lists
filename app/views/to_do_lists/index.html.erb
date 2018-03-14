@@ -6,9 +6,9 @@
       <% end %>
     </div>
   <% else %>
-    <h3>You don't have any to do lists yet.</h3>
+    <h3><%= I18n.t('to_do_list.no_lists') %></h3>
   <% end %>
-  <%= link_to "Add ToDo List", new_to_do_list_path, class: 'btn btn-primary btn-lg' %>
+  <%= link_to I18n.t('to_do_list.add'), new_to_do_list_path, class: 'btn btn-primary btn-lg' %>
 <% else %>
-  <h3>Log in to see your ToDoLists</h3>
+  <h3><%= I18n.t('to_do_list.login') %></h3>
 <% end %>

@@ -1,0 +1,5 @@
+en:
+  to_do_list:
+    no_lists: 'You don\'t have any to do lists yet.'
+    add: 'Add ToDo List'
+    login: 'Log in to see your ToDoLists'
