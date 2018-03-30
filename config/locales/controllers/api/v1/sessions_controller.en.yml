@@ -1,0 +1,5 @@
+---
+en:
+  api:
+    session:
+      wrong_credentials: "Invalid email or password"

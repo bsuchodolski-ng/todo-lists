@@ -13,4 +13,11 @@ Rails.application.routes.draw do
   end
   patch 'to_do_list_items/:id/done', to: 'to_do_list_items#done', as: :to_do_list_item_done
 
+  namespace :api, defaults: { format: :json } do
+    namespace :v1 do
+      get '/token', to: 'sessions#create'
+      delete '/token', to: 'sessions#destroy'
+    end
+  end
+
 end
