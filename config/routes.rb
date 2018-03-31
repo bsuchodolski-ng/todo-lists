@@ -17,6 +17,7 @@ Rails.application.routes.draw do
     namespace :v1 do
       get '/token', to: 'sessions#create'
       delete '/token', to: 'sessions#destroy'
+      resources :users, only: [:show, :update, :destroy]
     end
   end
 
