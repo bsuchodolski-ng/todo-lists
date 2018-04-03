@@ -45,4 +45,8 @@ class ActionDispatch::IntegrationTest
   def logout
     page.find("a[href='/logout']").trigger("click")
   end
+
+  def json_response
+    JSON.parse(response.body, symbolize_names: true)
+  end
 end

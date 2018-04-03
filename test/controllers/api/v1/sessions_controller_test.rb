@@ -11,7 +11,6 @@ class Api::V1::SessionsControllerTest < ActionDispatch::IntegrationTest
       email: @user.email,
       password: @user.password
     }
-    json_response = JSON.parse(response.body, symbolize_names: true)
     assert json_response[:token] == @user.reload.auth_token
   end
 
@@ -20,7 +19,6 @@ class Api::V1::SessionsControllerTest < ActionDispatch::IntegrationTest
       email: "invalid_email",
       password: "invalid password"
     }
-    json_response = JSON.parse(response.body, symbolize_names: true)
     assert json_response[:errors] == I18n.t('api.session.wrong_credentials')
     assert_response(422)
   end
