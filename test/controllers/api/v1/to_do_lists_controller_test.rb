@@ -51,4 +51,34 @@ class Api::V1::ToDoListsControllerTest < ActionDispatch::IntegrationTest
     assert_response(404)
   end
 
+  test 'create should return unauthorized error if auth token is invalid' do
+    post api_v1_to_do_lists_path, headers: { 'Authorization': 'some_fake_token' }
+    assert json_response[:errors] == I18n.t('api.base.not_authenticated')
+    assert_response(401)
+  end
+
+  test 'create should create new to do list and return it in response' do
+    assert_difference 'ToDoList.count', 1 do
+      post api_v1_to_do_lists_path, headers: { 'Authorization': @user.auth_token }, params: {
+        to_do_list: {
+          title: 'test_title'
+        }
+      }
+    end
+    assert_response(201)
+    assert json_response[:title] == 'test_title'
+  end
+
+  test 'create should return array of errors if title is invalid' do
+    assert_no_difference 'ToDoList.count' do
+      post api_v1_to_do_lists_path, headers: { 'Authorization': @user.auth_token }, params: {
+        to_do_list: {
+          title: ''
+        }
+      }
+    end
+    assert_response(422)
+    assert json_response[:errors].include? :title
+  end
+
 end
