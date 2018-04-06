@@ -74,4 +74,61 @@ class Api::V1::ToDoListItemsControllerTest < ActionDispatch::IntegrationTest
     get api_v1_to_do_list_to_do_list_item_path(@to_do_list, 99), headers: { 'Authorization': @user.auth_token }
     assert_response(404)
   end
+
+  test 'create should return unauthorized error if auth token is invalid' do
+    post api_v1_to_do_list_to_do_list_items_path(@to_do_list), headers: { 'Authorization': 'some_fake_token' }, params: {
+      to_do_list_item: {
+        content: 'test_content'
+      }
+    }
+    assert json_response[:errors] == I18n.t('api.base.not_authenticated')
+    assert_response(401)
+  end
+
+  test 'create should create to do list item and return it in response' do
+    assert_difference 'ToDoListItem.count', 1 do
+      post api_v1_to_do_list_to_do_list_items_path(@to_do_list), headers: { 'Authorization': @user.auth_token }, params: {
+        to_do_list_item: {
+          content: 'test_content'
+        }
+      }
+    end
+    assert_response(201)
+    assert json_response[:content] == ToDoListItem.last.content
+  end
+
+  test 'create should return list of errors if params are invalid' do
+    assert_no_difference 'ToDoListItem.count' do
+      post api_v1_to_do_list_to_do_list_items_path(@to_do_list), headers: { 'Authorization': @user.auth_token }, params: {
+        to_do_list_item: {
+          content: ''
+        }
+      }
+    end
+    assert_response(422)
+    assert json_response[:errors].include? :content
+  end
+
+  test 'create should 404 if list does not belong to user' do
+    assert_no_difference 'ToDoListItem.count' do
+      post api_v1_to_do_list_to_do_list_items_path(@to_do_list2), headers: { 'Authorization': @user.auth_token }, params: {
+        to_do_list_item: {
+          content: 'test_content'
+        }
+      }
+    end
+    assert_response(404)
+  end
+
+  test 'create should 404 if list does not exist' do
+    assert_no_difference 'ToDoListItem.count' do
+      post api_v1_to_do_list_to_do_list_items_path(99), headers: { 'Authorization': @user.auth_token }, params: {
+        to_do_list_item: {
+          content: 'test_content'
+        }
+      }
+    end
+    assert_response(404)
+  end
+
 end
