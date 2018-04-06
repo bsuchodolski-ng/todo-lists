@@ -1,7 +1,7 @@
 class Api::V1::ToDoListItemsController < Api::V1::BaseController
 
-  before_action :authenticate_with_token!, only: [:index, :show, :create, :update]
-  before_action :list_belongs_to_user, only: [:index, :show, :create, :update]
+  before_action :authenticate_with_token!, only: [:index, :show, :create, :update, :destroy]
+  before_action :list_belongs_to_user, only: [:index, :show, :create, :update, :destroy]
 
   def index
     render json: to_do_list.to_do_list_items
@@ -33,6 +33,16 @@ class Api::V1::ToDoListItemsController < Api::V1::BaseController
       else
         render json: { errors: @to_do_list_item.errors }, status: 422
       end
+    else
+      head 404
+    end
+  end
+
+  def destroy
+    @to_do_list_item = to_do_list.to_do_list_items.find_by(id: params[:id])
+    if @to_do_list_item
+      @to_do_list_item.destroy
+      head 204
     else
       head 404
     end

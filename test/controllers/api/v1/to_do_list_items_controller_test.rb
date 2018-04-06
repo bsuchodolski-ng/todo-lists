@@ -211,4 +211,50 @@ class Api::V1::ToDoListItemsControllerTest < ActionDispatch::IntegrationTest
     assert_response(404)
   end
 
+  test 'destroy should return unauthorized error if auth token is invalid' do
+    @to_do_list_item = create(:to_do_list_item, to_do_list: @to_do_list)
+    delete api_v1_to_do_list_to_do_list_item_path(@to_do_list, @to_do_list_item), headers: { 'Authorization': 'some_fake_token' }
+    assert json_response[:errors] == I18n.t('api.base.not_authenticated')
+    assert_response(401)
+  end
+
+  test 'destroy should destroy item' do
+    @to_do_list_item = create(:to_do_list_item, to_do_list: @to_do_list)
+    assert_difference 'ToDoListItem.count', -1 do
+      delete api_v1_to_do_list_to_do_list_item_path(@to_do_list, @to_do_list_item), headers: { 'Authorization': @user.auth_token }
+    end
+    assert_response(204)
+  end
+
+  test 'destroy should return 404 if list does not belong to user' do
+    @to_do_list_item = create(:to_do_list_item, to_do_list: @to_do_list)
+    assert_no_difference 'ToDoListItem.count' do
+      delete api_v1_to_do_list_to_do_list_item_path(@to_do_list2, @to_do_list_item), headers: { 'Authorization': @user.auth_token }
+    end
+    assert_response(404)
+  end
+
+  test 'destroy should return 404 if list does not exist' do
+    @to_do_list_item = create(:to_do_list_item, to_do_list: @to_do_list)
+    assert_no_difference 'ToDoListItem.count' do
+      delete api_v1_to_do_list_to_do_list_item_path(99, @to_do_list_item), headers: { 'Authorization': @user.auth_token }
+    end
+    assert_response(404)
+  end
+
+  test 'destroy should return 404 if item does not belong to list' do
+    @to_do_list_item = create(:to_do_list_item, to_do_list: @to_do_list2)
+    assert_no_difference 'ToDoListItem.count' do
+      delete api_v1_to_do_list_to_do_list_item_path(@to_do_list, @to_do_list_item), headers: { 'Authorization': @user.auth_token }
+    end
+    assert_response(404)
+  end
+
+  test 'destroy should return 404 if item does not exist' do
+    assert_no_difference 'ToDoListItem.count' do
+      delete api_v1_to_do_list_to_do_list_item_path(@to_do_list, 99), headers: { 'Authorization': @user.auth_token }
+    end
+    assert_response(404)
+  end
+
 end
