@@ -19,7 +19,7 @@ Rails.application.routes.draw do
       delete '/token', to: 'sessions#destroy'
       resources :users, only: [:show, :update, :destroy]
       resources :to_do_lists, only: [:index, :show, :create, :update, :destroy] do
-        resources :to_do_list_items, only: [:index]
+        resources :to_do_list_items, only: [:index, :show]
       end
     end
   end

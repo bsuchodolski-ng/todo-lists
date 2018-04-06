@@ -38,4 +38,40 @@ class Api::V1::ToDoListItemsControllerTest < ActionDispatch::IntegrationTest
     get api_v1_to_do_list_to_do_list_items_path(99), headers: { 'Authorization': @user.auth_token }
     assert_response(404)
   end
+
+  test 'show should return unauthorized error if auth token is invalid' do
+    @to_do_list_item = create(:to_do_list_item, to_do_list: @to_do_list)
+    get api_v1_to_do_list_to_do_list_item_path(@to_do_list, @to_do_list_item), headers: { 'Authorization': 'some_fake_token' }
+    assert json_response[:errors] == I18n.t('api.base.not_authenticated')
+    assert_response(401)
+  end
+
+  test 'show should render to do list item' do
+    @to_do_list_item = create(:to_do_list_item, to_do_list: @to_do_list)
+    get api_v1_to_do_list_to_do_list_item_path(@to_do_list, @to_do_list_item), headers: { 'Authorization': @user.auth_token }
+    assert json_response[:content] == @to_do_list_item.content
+  end
+
+  test 'show should return 404 if list does not belong to user' do
+    @to_do_list_item = create(:to_do_list_item, to_do_list: @to_do_list)
+    get api_v1_to_do_list_to_do_list_item_path(@to_do_list2, @to_do_list_item), headers: { 'Authorization': @user.auth_token }
+    assert_response(404)
+  end
+
+  test 'show should return 404 if list does not exist' do
+    @to_do_list_item = create(:to_do_list_item, to_do_list: @to_do_list)
+    get api_v1_to_do_list_to_do_list_item_path(99, @to_do_list_item), headers: { 'Authorization': @user.auth_token }
+    assert_response(404)
+  end
+
+  test 'show should return 404 if item does not belong to the list' do
+    @to_do_list_item = create(:to_do_list_item, to_do_list: @to_do_list2)
+    get api_v1_to_do_list_to_do_list_item_path(@to_do_list, @to_do_list_item), headers: { 'Authorization': @user.auth_token }
+    assert_response(404)
+  end
+
+  test 'show should return 404 if item does not exist' do
+    get api_v1_to_do_list_to_do_list_item_path(@to_do_list, 99), headers: { 'Authorization': @user.auth_token }
+    assert_response(404)
+  end
 end
