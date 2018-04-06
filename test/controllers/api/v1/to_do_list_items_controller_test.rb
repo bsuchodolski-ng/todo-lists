@@ -131,4 +131,84 @@ class Api::V1::ToDoListItemsControllerTest < ActionDispatch::IntegrationTest
     assert_response(404)
   end
 
+  test 'update should return unauthorized error if auth token is invalid' do
+    @to_do_list_item = create(:to_do_list_item, to_do_list: @to_do_list)
+    patch api_v1_to_do_list_to_do_list_item_path(@to_do_list, @to_do_list_item), headers: { 'Authorization': 'some_fake_token' }, params: {
+      to_do_list_item: {
+        content: 'content_edited',
+        done: true
+      }
+    }
+    assert json_response[:errors] == I18n.t('api.base.not_authenticated')
+    assert_response(401)
+  end
+
+  test 'update should update item and return it in response' do
+    @to_do_list_item = create(:to_do_list_item, to_do_list: @to_do_list)
+    patch api_v1_to_do_list_to_do_list_item_path(@to_do_list, @to_do_list_item), headers: { 'Authorization': @user.auth_token }, params: {
+      to_do_list_item: {
+        content: 'content_edited',
+        done: true
+      }
+    }
+    assert_response(200)
+    assert json_response[:content] == 'content_edited'
+    assert json_response[:done] == true
+  end
+
+  test 'update should return errors if params are invalid' do
+    @to_do_list_item = create(:to_do_list_item, to_do_list: @to_do_list)
+    patch api_v1_to_do_list_to_do_list_item_path(@to_do_list, @to_do_list_item), headers: { 'Authorization': @user.auth_token }, params: {
+      to_do_list_item: {
+        content: '',
+        done: true
+      }
+    }
+    assert_response(422)
+    assert json_response[:errors].include? :content
+  end
+
+  test 'update should return 404 if list does not belong to user' do
+    @to_do_list_item = create(:to_do_list_item, to_do_list: @to_do_list)
+    patch api_v1_to_do_list_to_do_list_item_path(@to_do_list2, @to_do_list_item), headers: { 'Authorization': @user.auth_token }, params: {
+      to_do_list_item: {
+        content: 'content_edited',
+        done: true
+      }
+    }
+    assert_response(404)
+  end
+
+  test 'update should return 404 if list does not exist' do
+    @to_do_list_item = create(:to_do_list_item, to_do_list: @to_do_list)
+    patch api_v1_to_do_list_to_do_list_item_path(99, @to_do_list_item), headers: { 'Authorization': @user.auth_token }, params: {
+      to_do_list_item: {
+        content: 'content_edited',
+        done: true
+      }
+    }
+    assert_response(404)
+  end
+
+  test 'update should return 404 if item does not belong to list' do
+    @to_do_list_item = create(:to_do_list_item, to_do_list: @to_do_list2)
+    patch api_v1_to_do_list_to_do_list_item_path(@to_do_list, @to_do_list_item), headers: { 'Authorization': @user.auth_token }, params: {
+      to_do_list_item: {
+        content: 'content_edited',
+        done: true
+      }
+    }
+    assert_response(404)
+  end
+
+  test 'update should return 404 if item does not exist' do
+    patch api_v1_to_do_list_to_do_list_item_path(@to_do_list, 99), headers: { 'Authorization': @user.auth_token }, params: {
+      to_do_list_item: {
+        content: 'content_edited',
+        done: true
+      }
+    }
+    assert_response(404)
+  end
+
 end
