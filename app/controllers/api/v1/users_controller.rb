@@ -5,7 +5,7 @@ class Api::V1::UsersController < Api::V1::BaseController
 
   def show
     if user
-      render json: user.as_json(except: [:password_digest, :auth_token])
+      render json: user, except: [:password_digest, :auth_token]
     else
       head 404
     end
