@@ -81,4 +81,53 @@ class Api::V1::ToDoListsControllerTest < ActionDispatch::IntegrationTest
     assert json_response[:errors].include? :title
   end
 
+  test 'update should return unauthorized error if auth token is invalid' do
+    @to_do_list = create(:to_do_list, user: @user)
+    patch api_v1_to_do_list_path(@to_do_list), headers: { 'Authorization': 'some_fake_token' }
+    assert json_response[:errors] == I18n.t('api.base.not_authenticated')
+    assert_response(401)
+  end
+
+  test 'update should update to do list and return it in response' do
+    @to_do_list = create(:to_do_list, user: @user)
+    patch api_v1_to_do_list_path(@to_do_list), headers: { 'Authorization': @user.auth_token }, params: {
+      to_do_list: {
+        title: 'test_title'        }
+    }
+    assert_response(200)
+    assert json_response[:title] == 'test_title'
+    assert @to_do_list.reload.title == 'test_title'
+  end
+
+  test 'update should return array of errors if title is invalid' do
+    @to_do_list = create(:to_do_list, user: @user)
+    patch api_v1_to_do_list_path(@to_do_list), headers: { 'Authorization': @user.auth_token }, params: {
+      to_do_list: {
+        title: ''
+      }
+    }
+    assert_response(422)
+    assert json_response[:errors].include? :title
+  end
+
+  test 'update should return 404 if list does not belong to user' do
+    @user2 = create(:user)
+    @to_do_list = create(:to_do_list, user: @user2)
+    patch api_v1_to_do_list_path(@to_do_list), headers: { 'Authorization': @user.auth_token }, params: {
+      to_do_list: {
+        title: 'test_title'
+      }
+    }
+    assert_response(404)
+  end
+
+  test 'update should return 404 if list does not exist' do
+    patch api_v1_to_do_list_path(99), headers: { 'Authorization': @user.auth_token }, params: {
+      to_do_list: {
+        title: 'test_title'
+      }
+    }
+    assert_response(404)
+  end
+
 end
