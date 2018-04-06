@@ -130,4 +130,37 @@ class Api::V1::ToDoListsControllerTest < ActionDispatch::IntegrationTest
     assert_response(404)
   end
 
+  test 'destroy should return unauthorized error if auth token is invalid' do
+    @to_do_list = create(:to_do_list, user: @user)
+    delete api_v1_to_do_list_path(@to_do_list), headers: { 'Authorization': 'some_fake_token' }
+    assert json_response[:errors] == I18n.t('api.base.not_authenticated')
+    assert_response(401)
+  end
+
+  test 'destroy should destroy to do list' do
+    @to_do_list = create(:to_do_list, user: @user)
+    assert_difference 'ToDoList.count', -1 do
+      delete api_v1_to_do_list_path(@to_do_list), headers: { 'Authorization': @user.auth_token }
+    end
+    assert_response(204)
+  end
+
+  test 'destroy should return 404 if to do list does not belong to user' do
+    @user2 = create(:user)
+    @to_do_list = create(:to_do_list, user: @user2)
+    assert_no_difference 'ToDoList.count' do
+      delete api_v1_to_do_list_path(@to_do_list), headers: { 'Authorization': @user.auth_token }
+    end
+    assert_response(404)
+  end
+
+  test 'destroy should return 404 if to do list does not exist' do
+    @user2 = create(:user)
+    @to_do_list = create(:to_do_list, user: @user2)
+    assert_no_difference 'ToDoList.count' do
+      delete api_v1_to_do_list_path(99), headers: { 'Authorization': @user.auth_token }
+    end
+    assert_response(404)
+  end
+
 end
