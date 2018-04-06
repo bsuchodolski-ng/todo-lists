@@ -26,4 +26,29 @@ class Api::V1::ToDoListsControllerTest < ActionDispatch::IntegrationTest
     assert json_response == []
   end
 
+  test 'show should return unauthorized error if auth token is invalid' do
+    @to_do_list = create(:to_do_list, user: @user)
+    get api_v1_to_do_list_path(@to_do_list), headers: { 'Authorization': 'some_fake_token' }
+    assert json_response[:errors] == I18n.t('api.base.not_authenticated')
+    assert_response(401)
+  end
+
+  test 'show should return to do list if token is valid' do
+    @to_do_list = create(:to_do_list, user: @user)
+    get api_v1_to_do_list_path(@to_do_list), headers: { 'Authorization': @user.auth_token }
+    assert json_response[:title] == @to_do_list.title
+  end
+
+  test 'show should return 404 if to do list belongs to other user' do
+    @user2 = create(:user)
+    @to_do_list = create(:to_do_list, user: @user2)
+    get api_v1_to_do_list_path(@to_do_list), headers: { 'Authorization': @user.auth_token }
+    assert_response(404)
+  end
+
+  test 'show should return 404 if to do list does not exist' do
+    get api_v1_to_do_list_path(99), headers: { 'Authorization': @user.auth_token }
+    assert_response(404)
+  end
+
 end
