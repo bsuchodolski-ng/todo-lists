@@ -18,7 +18,6 @@ gem 'bootstrap', '~> 4.0.0'
 gem 'jquery-rails'
 gem 'factory_bot_rails', '~> 4.0'
 gem 'best_in_place', '~> 3.0.1'
-gem 'capybara-webkit'
 
 group :development, :test do
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
@@ -41,6 +40,7 @@ end
 
 group :test do
   gem 'rails-controller-testing'
+  gem 'capybara-webkit'
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
