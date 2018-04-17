@@ -7,7 +7,7 @@ class Api::V1::SessionsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'create should return user token' do
-    get api_v1_token_path, params: {
+    post api_v1_token_path, params: {
       email: @user.email,
       password: @user.password
     }
@@ -15,7 +15,7 @@ class Api::V1::SessionsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'create should return error if email or password is invalid' do
-    get api_v1_token_path, params: {
+    post api_v1_token_path, params: {
       email: "invalid_email",
       password: "invalid password"
     }

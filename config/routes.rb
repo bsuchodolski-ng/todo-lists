@@ -15,7 +15,7 @@ Rails.application.routes.draw do
 
   namespace :api, defaults: { format: :json } do
     namespace :v1 do
-      get '/token', to: 'sessions#create'
+      post '/token', to: 'sessions#create'
       delete '/token', to: 'sessions#destroy'
       resources :users, only: [:show, :update, :destroy]
       resources :to_do_lists, only: [:index, :show, :create, :update, :destroy] do
