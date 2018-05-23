@@ -6,7 +6,7 @@
       <% end %>
   </td>
   <td>
-    <%= best_in_place to_do_list_item, :content, url: to_do_list_item_url(to_do_list_item), inner_class: 'form-control' %>
+    <%= best_in_place to_do_list_item, :content, url: '#', inner_class: 'form-control' %>
   </td>
   <td><%= link_to I18n.t('to_do_list_item.delete'), to_do_list_item_url(to_do_list_item), method: :delete, class: 'btn btn-danger btn-sm float-right', remote: true %></td>
 </tr>
