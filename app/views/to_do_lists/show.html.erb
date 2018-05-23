@@ -8,7 +8,7 @@
     </table>
     <%= form_with(model: ToDoListItem.new, url: to_do_list_to_do_list_items_url(@to_do_list)) do |f| %>
       <%= f.text_field :content, required: true, class: 'form-control' %>
-      <%= f.submit I18n.t('to_do_list_item.add_btn'), class: 'btn btn-primary btn-block', data: { disable_with: I18n.t('to_do_list_item.adding') } %>
+      <%= f.submit I18n.t('to_do_list_item.add_btn'), class: 'btn btn-primary btn-block', data: { disable_with: I18n.t('to_do_list_item.ading') } %>
     <% end %>
     <%= link_to I18n.t('to_do_list.delete_btn'), '#', class: 'btn btn-danger btn-block' %>
   </div>
