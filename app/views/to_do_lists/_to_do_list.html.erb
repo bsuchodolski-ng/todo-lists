@@ -2,7 +2,7 @@
   <%= link_to to_do_list do %>
     <div class="card">
       <h4><%= to_do_list.title %></h4>
-      <p><%= pluralize(to_do_list.to_do_list_items.count, 'item') %></p>
+      <p><%= pluralize(to_do_list.to_do_list_items.count + 1, 'item') %></p>
     </div>
   <% end %>
 </div>
