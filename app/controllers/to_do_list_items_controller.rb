@@ -31,7 +31,6 @@ class ToDoListItemsController < ApplicationController
   def destroy
     respond_to do |format|
       @to_do_list_item = ToDoListItem.find(params[:id])
-      @to_do_list_item.destroy
       format.js
     end
   end
