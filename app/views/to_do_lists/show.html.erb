@@ -10,6 +10,6 @@
       <%= f.text_field :content, required: true, class: 'form-control' %>
       <%= f.submit I18n.t('to_do_list_item.add_btn'), class: 'btn btn-primary btn-block', data: { disable_with: I18n.t('to_do_list_item.adding') } %>
     <% end %>
-    <%= link_to I18n.t('to_do_list.delete_btn'), to_do_list_path(@to_do_list), method: :delete, class: 'btn btn-danger btn-block' %>
+    <%= link_to I18n.t('to_do_list.delete_btn'), '#', class: 'btn btn-danger btn-block' %>
   </div>
 </div>
